@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Button, StyleSheet, Image, TouchableOpacity, TextInput } from 'react-native';
 import Onboarding from 'react-native-onboarding-swiper';
 import { SafeAreaView } from 'react-navigation';
 
