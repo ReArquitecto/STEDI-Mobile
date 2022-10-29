@@ -42,14 +42,9 @@ const OnboardingScreen = ({setFirstLaunch}) =>{
         pages={[
             {
               backgroundColor: '#fff',
-              image: <Image   style={{height: '60%', width: '90%', resizeMode:'contain', marginBottom:-200}} source={require('../image/testing.png')} />,
-              title: <Text style={{fontWeight:'bold', textAlign:'center', color:'#A0CE4E', fontSize:19, margin:12,  marginTop: -70}}>Welcome to STEDI  Balance</Text>,
-              subtitle: (
-                <View>
-                  <Text style={{fontWeight:'bold', textAlign:'center', color:'#A0CE4E', fontSize:19, margin:12,  marginTop: -100}}>We value your privacy. Please share your phone so we can track your balance.</Text>
-                  <TextInput placeholder ='Phone Number'/>
-                </View>
-              ),
+              image: <Image   style={{height: '60%', width: '90%', resizeMode:'contain', marginBottom:-250}} source={require('../image/testing.png')} />,
+              title: <Text style={{fontWeight:'bold', textAlign:'center', color:'#A0CE4E', fontSize:19, margin:12,  marginTop: 0}}>Welcome to STEDI  Balance</Text>,
+              subtitle: "Stedi will now send you a text",
             },
             {
                 backgroundColor: '#fff',
