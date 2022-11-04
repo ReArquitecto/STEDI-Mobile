@@ -1,10 +1,11 @@
 import React, { useEffect, useState, } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, AsyncStorage, Button, TextInput} from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Button, TextInput} from 'react-native';
 import  Navigation from './components/Navigation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import OnboardingScreen from './screens/OnboardingScreen';
 import Home from './screens/Home';
 import { NavigationContainer } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const AppStack = createNativeStackNavigator();
@@ -16,7 +17,7 @@ const loggedInStates={
 
 const App = () =>{
   const [isFirstLaunch, setFirstLaunch] = React.useState(true);
-  const [loggedInState, setLoggedInStates] = React.useState(loggedInStates.NOT_LOGGED_IN);
+  const [loggedInState, setLoggedInState] = React.useState(loggedInStates.NOT_LOGGED_IN);
   const [homeTodayScore, setHomeTodayScore] = React.useState(0);
   const [phoneNumber, setPhoneNumber] = React.useState("")
   const [oneTimePassword, setOneTimePassowrd] = React.useState(null);
@@ -48,7 +49,7 @@ const App = () =>{
             'content-type':'application/text'
           }
         })
-        setLoggedInStates(loggedInStates.CODE_SENT)
+        setLoggedInState(loggedInStates.CODE_SENT)
       }}
      />
     </View>
@@ -68,15 +69,23 @@ const App = () =>{
       style={styles.button}
       onPress={async()=>{
         console.log('Loggin button was pressed!')
-        await fetch('https://dev.stedi.me/twofactorlogin',
+        const loginResponse = await fetch('https://dev.stedi.me/twofactorlogin/',
         {
           method:'POST',
           headers:{
             'content-type':'application/text'
-          }
-          body:
+          },
+          body:JSON.stringify({
+            phoneNumber,
+            oneTimePassword
+          })
         })
-        setLoggedInStates(loggedInStates.CODE_SENT)
+        if (loginResponse.status == 200){
+        setLoggedInState(loggedInStates.LOGGED_IN);
+        } else {
+          setLoggedInState(NOT_LOGGED_IN);
+        }
+        setLoggedInState(loggedInStates.CODE_SENT)
       }}
      />
       </View>
