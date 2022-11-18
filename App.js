@@ -26,7 +26,7 @@ const App = () =>{
     const getSessionToken = async () => {
     const sessionToken = await AsyncStorage.getItem('sessionToken');
     console.log('sessionToken', sessionToken);
-    const validateResponse = await fetch('https://dev.stedi.me/validate'+sessionToken,
+    const validateResponse = await fetch('https://dev.stedi.me/validate/'+sessionToken,
     {
       method: 'GET',
       headers: {
@@ -88,9 +88,11 @@ const App = () =>{
     <Button
     title='Loggin'
       style={styles.button}
-      onPress={async()=>{
+      onPress={async()=>{console.log("Login button was pressed!");
         console.log('Loggin button was pressed!')
-        const loginResponse = await fetch('https://dev.stedi.me/twofactorlogin/',
+        console.log('Phone number', phoneNumber);
+        console.log("oneTimePassword", oneTimePassword);
+        const loginResponse = await fetch('https://dev.stedi.me/twofactorlogin',
         {
           method:'POST',
           headers:{
@@ -108,7 +110,7 @@ const App = () =>{
         } else {
           console.log('response status', loginResponse.status);
           Alert.alert('Invalid', 'Invalid login information');
-          setLoggedInState(NOT_LOGGED_IN);
+          setLoggedInState(loggedInStates.NOT_LOGGED_IN);
         }
         setLoggedInState(loggedInStates.CODE_SENT)
       }}
