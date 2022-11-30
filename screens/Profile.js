@@ -1,8 +1,8 @@
 
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, Image, SafeAreaView , Share, ScrollView, Button} from 'react-native';
 import { Card, CardTitle, CardContent} from 'react-native-material-cards';
-import {Camera} from 'expo-camera';
+import {Camera, CameraType} from 'expo-camera';
 import BarChart from 'react-native-bar-chart';
 // import Share from 'react-native-share';
 
@@ -22,12 +22,27 @@ import BarChart from 'react-native-bar-chart';
 // const horizontalData = ['S', 'M', 'T', 'W', 'T', 'F','S'];
 
 const Profile = (props) => {
+  const [userName, setUserName] = useState("");
+  const [profilePhoto,setProfilePhoto] = useState(null);
+  const[cameraReady, setCameraReady] = useState(false);
+  const cameraRef = useRef(null);
+
   useEffect(()=>{
-  const getUserInfo = async ()=>{
-    const cameraPermission = await Camera.requestCameraPermissionsAsync();
-  };
+    const getUserInfo = async ()=>{
+      const cameraPermission = await Camera.requestCameraPermissionsAsync();
+      //setCameraPermission(cameraPermission.status == 'granted');
+
+      const userName = await AsyncStorage.getItem('userName');
+      console.log('userName', userName);
+      setUserName(userName);
+      
+      const profilePhoto = await AsyncStorage.getItem('profilePhoto');
+      setProfilePhoto(profilePhoto);
+
+    }
+    getUserInfo();
+  });
   getUserInfo();
-},[]);
   const myCustomerShare = async() =>{
     const shareOptions = {
       message: 'This is a test'
@@ -40,7 +55,28 @@ const Profile = (props) => {
   console.log('Error', error)
       }
     }
-
+if(profilePhoto == null){
+  const cameraOptions = {
+    quality: 0,
+    exif: false
+  }
+  return(
+    <View style={styles.container}>
+    <Camera style={styles.camera} type={CameraType.front} ref={cameraRef} onCameraReady={()=>setCameraReady(true)}>
+      <View style={styles.buttonContainer}>
+        {camraReady?<TouchableOpacity style={styles.button} onPress={async()=>{
+          const photo = await cameraRef.current.takePictureAsync(cameraOptions);
+          console.log('Picture', photo);
+          await AsyncStorage.setItem('profilePhoto', photo.uri);
+          setProfilePhoto(photo.uri);
+        }}>
+          <Text style={styles.text}>Take Photo</Text>
+        </TouchableOpacity>:null}
+      </View>
+    </Camera>
+    </View>
+  );
+} else {
   return (
     <SafeAreaView style={{flex: 1}}>
          <Card style={{backgroundColor:'white', borderRadius: 10, margin:20 ,width: 320, shadowColor: "#000",
@@ -66,6 +102,7 @@ elevation: 4}}>
     </Card>
  </SafeAreaView>
   );
+}
 };
 export default Profile;
 const styles = StyleSheet.create({
